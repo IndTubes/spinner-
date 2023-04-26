@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "279889511413",
+    "project_id": "indtubes-89824",
+    "storage_bucket": "indtubes-89824.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279889511413:android:e74a5972ea2e6ebc1196bc",
+        "android_client_info": {
+          "package_name": "com.example.indtubes_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279889511413-0vjn56nd318p9te09j5ogsk6c3p1ja6r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.indtubes_1",
+            "certificate_hash": "f6db2f7ce2c3c7c189e85717a85c436535274714"
+          }
+        },
+        {
+          "client_id": "279889511413-12jag4bhqhtcdhh7vq9136ml497i2hhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpR1bDz23aA4AS3qq2eUQ1m05nxuuR_vE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279889511413-12jag4bhqhtcdhh7vq9136ml497i2hhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
