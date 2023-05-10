@@ -46,6 +46,14 @@ dependencies:
   device_info_plus: ^8.2.0
   #to use gif image_picker:
   gif: ^2.2.0
+  #  To play audio
+  audioplayers: ^4.0.1
+  audio_service: ^0.18.9
+  just_audio: ^0.9.32
+  audio_session: ^0.1.13
+  #Taking Image from Network
+  cached_network_image: ^3.2.3
+
 
 
 dev_dependencies:

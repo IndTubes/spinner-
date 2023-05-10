@@ -1,15 +1,19 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:indtubes_1/resources/asset_constants.dart';
 import 'package:indtubes_1/resources/color_constants.dart';
 import 'package:indtubes_1/resources/material_button.dart';
 import 'package:indtubes_1/spinner/widget/gif_asset.dart';
+import 'package:indtubes_1/view_model/spinning_controller.dart';
 
 
 class ShowMaterialPopup{
 
-  static showPopup({required  BuildContext context , required VoidCallback onTap  }){
+  static showPopup({required  BuildContext context , required VoidCallback onTap  })
+  {
+    final spinnerController = Get.put(SpinningController());
     AlertDialog alertDialog = AlertDialog(
      backgroundColor: Colors.transparent,
       content: Column(
@@ -20,6 +24,8 @@ class ShowMaterialPopup{
           InkWell(
             onTap: () {
               Navigator.pop(context);
+              spinnerController.isPopupComing.value = true ;
+
             },
             child: Container(
                 transformAlignment: Alignment.topCenter,
