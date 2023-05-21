@@ -24,4 +24,18 @@ class ColorConstants {
   static const Color statusColoursGreen0 = Color(0xFF05A660);
   static const Color statusColoursRed0 = Color(0xFFE53535);
   static const Color statusColoursBlue0 = Color(0xFF2A5EE3);
+
+  // rewarded Page //
+  static const Color topColors = Color(0xFF7040C5);
+  static const Color middleColors = Color(0xFF642278);
+  static const Color bottomColors = Color(0xFF498989);
+  static const Color endColors = Color(0xFF00F8DC);
+
+
+  static  Color rewardColor1 = const Color(0xFF5C79A3);
+  static  Color rewardColor2 = const Color(0xFF66458E);
+  static  Color rewardColor3 = const Color(0xFF9E67A7);
+
+
+
 }

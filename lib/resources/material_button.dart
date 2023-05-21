@@ -3,8 +3,13 @@ import 'package:indtubes_1/resources/color_constants.dart';
 class MaterialButtons extends StatefulWidget {
 
   final String text ;
+  final double? width ;
+  final double? fontSize ;
+  final List<Color>? colorList ;
+  final BoxBorder? border ;
   final VoidCallback onTap ;
-  const MaterialButtons({Key? key , required this.text , required this.onTap}) : super(key: key);
+  final List<BoxShadow>? boxShadow ;
+  const MaterialButtons({Key? key , required this.text , required this.onTap ,this.boxShadow ,  this.width ,this.border ,  this.fontSize, this.colorList}) : super(key: key);
 
   @override
   State<MaterialButtons> createState() => _MaterialButtonState();
@@ -16,24 +21,24 @@ class _MaterialButtonState extends State<MaterialButtons> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
-        width: 120,
+        width:widget.width?? 120,
         height: 40,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient:  LinearGradient(
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,
-            colors: [
-              ColorConstants.bgWallet , Colors.black
+            colors: widget.colorList??[
+              ColorConstants.bgWallet.withOpacity(0.8) , Colors.black
             ]
           ),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.yellowAccent , width: 2),
-          boxShadow:const  [BoxShadow(blurStyle: BlurStyle.inner,  color: Colors.yellowAccent , blurRadius: 5 , spreadRadius: 2 )]
+          border:widget.border?? Border.all(color: Colors.yellowAccent , width: 1),
+          boxShadow:const  [BoxShadow(blurStyle: BlurStyle.inner,  color: Colors.yellowAccent , blurRadius: 2 , spreadRadius: 2 )]
           ),
         child: Center(
-          child: Text(widget.text , style: const TextStyle(
+          child: Text(widget.text , style:  TextStyle(
             color: Colors.white ,
-            fontSize: 12 ,
+            fontSize:widget.fontSize?? 12 ,
             fontWeight: FontWeight.w500 ,
           ),),
         ),

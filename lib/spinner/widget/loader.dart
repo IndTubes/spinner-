@@ -1,7 +1,7 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:indtubes_1/resources/asset_constants.dart';
 import 'package:indtubes_1/resources/color_constants.dart';
 
 class Loader extends StatefulWidget {
@@ -13,16 +13,19 @@ class Loader extends StatefulWidget {
 
 class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController =
-  AnimationController(vsync: this, duration: const Duration(seconds: 2));
+      AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
   // ignore: non_constant_identifier_names
   late final Animation<double> _animation_in;
+
   // ignore: non_constant_identifier_names
   late final Animation<double> _animation_out;
+
   // ignore: non_constant_identifier_names
   late final Animation<double> _animation_rotate;
   final double initialRadius = 30.0;
   double radius = 0.0;
+
   @override
   void initState() {
     _animation_in = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
@@ -54,38 +57,42 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 300,
-        width: 300,
-        child: AnimatedBuilder(
-            animation: _animationController,
-            child:  Dot(
-              color: ColorConstants.primaryColor,
-              radius: 30,
-            ),
-            builder: (context, child) => RotationTransition(
-                turns: _animation_rotate,
-                child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                Transform.translate(
-                offset: Offset(radius * cos(pi / 2), radius  *sin(pi / 2)),
-        child: child),
-    Transform.translate(
-    offset: Offset(
-    radius * cos(2*  pi / 2), radius * sin(2*  pi / 2)),
-    child: child),
-    Transform.translate(
-    offset: Offset(
-    radius * cos(3*  pi / 2), radius * sin(3*  pi / 2)),
-    child: child),
-    Transform.translate(
-    offset: Offset(
-    radius * cos(4 * pi / 2), radius * sin(4 * pi / 2)),
-    child: child)
-    ],
-    ),
-    ),
-    ),
+      height: 300,
+      width: 300,
+      child: AnimatedBuilder(
+        animation: _animationController,
+        child:  const SizedBox(
+          width: 50,
+          height: 50,
+          child:  Image(
+            image:AssetImage(AssetConstants.icGifCoin)
+
+          ),
+        ),
+        builder: (context, child) => RotationTransition(
+          turns: _animation_rotate,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Transform.translate(
+                  offset: Offset(radius * cos(pi / 2), radius * sin(pi / 2)),
+                  child: child),
+              Transform.translate(
+                  offset: Offset(
+                      radius * cos(2 * pi / 2), radius * sin(2 * pi / 2)),
+                  child: child),
+              Transform.translate(
+                  offset: Offset(
+                      radius * cos(3 * pi / 2), radius * sin(3 * pi / 2)),
+                  child: child),
+              Transform.translate(
+                  offset: Offset(
+                      radius * cos(4 * pi / 2), radius * sin(4 * pi / 2)),
+                  child: child)
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -95,6 +102,7 @@ class Dot extends StatelessWidget {
       : super(key: key);
   final double radius;
   final Color color;
+
   @override
   Widget build(BuildContext context) {
     return Center(
