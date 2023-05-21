@@ -1,5 +1,5 @@
 
-import 'dart:math';
+import 'dart:math' ;
 
 import 'package:flutter/material.dart';
 
@@ -24,11 +24,10 @@ class CustomTracker extends CustomPainter{
     canvas.drawCircle(center, 35, paint) ;
 
 
-    var sweepAngle = 2*pi/180 ;
 
     canvas.drawArc(
         Rect.fromCircle(center: center, radius: 35),
-        0, 2*pi*(20/100),  false, paint1);
+        0, 2*pi*(30/100),  false, paint1);
   }
 
   @override

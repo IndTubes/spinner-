@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:audio_session/audio_session.dart';
+import 'package:indtubes_1/routes/route_constants.dart';
+import 'package:indtubes_1/show_popup.dart';
+import 'package:indtubes_1/spinner/widget/loader.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
@@ -11,27 +14,31 @@ import 'package:gif/gif.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:indtubes_1/admob/ad_helper.dart';
-import 'package:indtubes_1/main.dart';
-import 'package:indtubes_1/resources/asset_constants.dart';
 
 class SpinningController extends FullLifeCycleController with GetSingleTickerProviderStateMixin, GetTickerProviderStateMixin{
 
-
-
+  Timer? timer ;
+  Duration? duration ;
+  bool countDown = true ;
+  RxInt seconds= 0.obs ;
   static const int maxFailedLoadAttempts = 3;
-
+  RxString timerString = "".obs;
+  SnackbarController? snackBarController ;
   RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
   RxBool isAdShown = false.obs ;
   bool flag = false;
+  final RxString dateTime = "".obs;
+  final RxBool activeTimer = false.obs ;
   final RxBool  isPopupComing = false.obs  ;
 
-  static final AdRequest request =   AdRequest(
+  static const AdRequest request =  AdRequest(
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,
   );
 
+  String strDigits(int n) => n.toString().padLeft(2, '0');
 
   List<double> sectors = [1, 2, 3, 3, 5, 6, 7, 8, 0, 10, 11, 12];
 
@@ -42,20 +49,23 @@ class SpinningController extends FullLifeCycleController with GetSingleTickerPro
 
   double angle = 0;
 
-  bool spinning = false;
+  RxBool spinning = false.obs;
 
   double earnedValue = 0;
 
   RxBool isAdsSeen = false.obs ;
 
   double totalEarnings = 0;
+  RxBool onTapReward = false.obs;
 
   int spins = 0;
 
-  int delayTimeInSecond = 3;
+
+  int delayTime = 25 ;
+  int delayTimeInSecond = 5 ;
    String? deviceId  ;
-  late  AnimationController animationController;
-  late Animation<double> animation;
+  late  AnimationController animationController ;
+  late Animation<double> animation ;
   late GifController gifController ;
 
   Random random = Random();
@@ -64,6 +74,8 @@ class SpinningController extends FullLifeCycleController with GetSingleTickerPro
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
+  //  timerString.value = "${duration.inMinutes.remainder(60)}:${duration.inSeconds.remainder(60)}";
+    debugPrint(timerString.value);
    gifController =  GifController(vsync: this) ;
    _init() ;
    isPopupComing.value = true ;
@@ -88,9 +100,11 @@ class SpinningController extends FullLifeCycleController with GetSingleTickerPro
         //record states
         recordStats();
         // update status boolean
-        spinning = false;
+        spinning.value = false;
       }
     });
+
+
     super.onInit();
   }
 
@@ -115,6 +129,68 @@ class SpinningController extends FullLifeCycleController with GetSingleTickerPro
     super.dispose();
   }
 
+  void startTimer(){
+    debugPrint("Inside start Timer") ;
+    duration=const  Duration(minutes: 2);
+    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTimer());
+  }
+
+
+  void addTimer(){
+
+    final addSecond = countDown? -1:1;
+    seconds.value = duration!.inSeconds - 1 ;
+    debugPrint("The second is ${seconds.value}");
+    if(seconds.value<0){
+      timer?.cancel();
+      snackBarController!.close() ;
+    }else{
+      duration= Duration(seconds: seconds.value);
+      timerString.value = "${strDigits(duration!.inHours.remainder(60))}:${strDigits(duration!.inMinutes.remainder(60))}:${strDigits(duration!.inSeconds.remainder(60))}";
+      debugPrint(timerString.value);
+    }
+  }
+  onTapRewardBtn(){
+    onTapReward.value = true ;
+    snackBarController!.close() ;
+    Future.delayed(const Duration(seconds: 1),(){
+      onTapReward.value = false ;
+      Get.toNamed(RouteConstants.rewardRoute);
+
+    });
+  }
+
+  onTapSpinButton(BuildContext context){
+    if(isPopupComing.value && seconds.value <=0)
+
+    {
+        isPopupComing.value = false ;
+      Timer(Duration(seconds: delayTimeInSecond),
+              () {
+
+            activeTimer.value = true ;
+            isAdsSeen.value = false ;
+            ShowMaterialPopup.showPopUp(
+                context: context,
+                onTap: () async {
+                  debugPrint("Before create Rewarded");
+                  await createRewardedAd();
+                  debugPrint("After create Rewarded");
+                  Navigator.pop(context);
+                  isAdShown.value = true;
+                  if(!isAdShown.value) {
+                    isAdsSeen.value = true;
+                  }
+                });
+
+          });
+
+
+      if (!spinning.value) {
+        spin();
+      }
+    }
+  }
 
   Future<void> _init() async {
     // Inform the operating system of our app's audio attributes etc.
@@ -215,8 +291,13 @@ class SpinningController extends FullLifeCycleController with GetSingleTickerPro
     _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
           print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
+         startTimer();
           isAdShown.value = false ;
           isAdsSeen.value = true ;
+          isPopupComing.value = true ;
+
+          snackBarController =  ShowMaterialPopup.showTimerSnackBar();
+
           Timer.periodic(const Duration(seconds: 20), (timer) {
             isAdsSeen.value = false ;
           });
@@ -238,6 +319,7 @@ class SpinningController extends FullLifeCycleController with GetSingleTickerPro
     earnedValue = sectors[sectors.length - (randomSectorIndex + 1)];
     totalEarnings = totalEarnings + earnedValue;
     spins = spins + 1;
+
     update();
   }
 

@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:indtubes_1/resources/asset_constants.dart';
 import 'package:indtubes_1/resources/material_button.dart';
-import 'package:indtubes_1/routes/route_constants.dart';
-import 'package:indtubes_1/show_popup.dart';
 import 'package:indtubes_1/spinner/widget/control_button.dart';
 import 'package:indtubes_1/view_model/spinning_controller.dart';
 import '../resources/color_constants.dart';
@@ -19,19 +17,24 @@ class SpinnerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          height: Get.height,
-          width: Get.width,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(AssetConstants.bg), fit: BoxFit.cover)),
-          child: gameContent(context)),
+    return WillPopScope(
+      onWillPop: () async{
+       return  false ;
+      },
+      child: Scaffold(
+        body: Container(
+            height: Get.height,
+            width: Get.width,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(AssetConstants.bg), fit: BoxFit.cover)),
+            child: gameContent(context)),
+      ),
     );
   }
 
   Widget gameContent(BuildContext context) => Padding(
-        padding:const  EdgeInsets.symmetric(horizontal: 20.0, vertical: 24),
+        padding:const  EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -41,13 +44,17 @@ class SpinnerScreen extends StatelessWidget {
                        decoration: BoxDecoration(
                          color: Colors.black.withOpacity(0.2)
                        ),
-                       child: Row(
+                       child:
+                       Row(
                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                          children: [
                            Expanded(
                                child: ControlButtons(spinningController.player )),
                            MaterialButtons( fontSize: 14 , text: "Rewards", onTap: (){
-                               Get.toNamed(RouteConstants.rewardRoute);
+
+                             spinningController.onTapRewardBtn() ;
+
+
                              },)
 
                          ],
@@ -60,39 +67,17 @@ class SpinnerScreen extends StatelessWidget {
                 gameBelt(),
                 gameWheel(),
                 InkWell(
-                  onTap: (){
-                    if(spinningController.isPopupComing.value){
-                      spinningController.isPopupComing.value = false ;
-                      Timer(Duration(seconds: spinningController.delayTimeInSecond),
-                              () {
-                            ShowMaterialPopup.showPopup(
-                                context: context,
-                                onTap: () async {
-                                  debugPrint("Before create Rewarded");
-                                  await spinningController.createRewardedAd();
-                                  debugPrint("After create Rewarded");
-                                  Navigator.pop(context);
-                                  spinningController.isAdShown.value = true;
-                                  if(!spinningController.isAdShown.value) {
-                                    spinningController.isAdsSeen.value = true;
-                                  }
-                                });
-                          });
-
-                      if (!spinningController.spinning) {
-                        spinningController.spin();
-                      }
-                    }
-                  },
+                  onTap:()=> spinningController.onTapSpinButton(context),
                   child: SizedBox(
                       width: Get.width * .18,
                       child: Image.asset(AssetConstants.icSpin)),
                 ),
-                spinningController.isAdShown.value ? Loader() : Offstage()
+                spinningController.isAdShown.value || spinningController.onTapReward.value? const Loader() : const Offstage(),
+
               ]),
             ),
 
-            spinningController.isAdsSeen.value ?SizedBox.shrink():SizedBox(
+            spinningController.isAdsSeen.value ?const SizedBox.shrink():const SizedBox(
               height:20,
             ),
             goldenBox,
@@ -105,7 +90,7 @@ class SpinnerScreen extends StatelessWidget {
       );
 
   Widget gameBelt() =>
-      SizedBox(width: Get.width, child:Image(
+      SizedBox(width: Get.width, child:const Image(
         image: CachedNetworkImageProvider( "https://indtubes.com/spinner/IndTubes/assets/belt.png",),
       ),);
 
@@ -119,7 +104,7 @@ class SpinnerScreen extends StatelessWidget {
                     spinningController.angle,
                 child: SizedBox(
                   width: Get.width * .768,
-                  child: Image(
+                  child:const  Image(
                     image: CachedNetworkImageProvider( "https://indtubes.com/spinner/IndTubes/assets/spinningCircle.png",),
                   ),
                 ));

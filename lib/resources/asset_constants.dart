@@ -17,4 +17,5 @@ class AssetConstants {
   static const String icFire  ='$_rootIconsPath/ic_fire.png' ;
   static const String icReward1  ='$_rootIconsPath/ic_reward_1.png' ;
   static const String icReward2  ='$_rootIconsPath/ic_reward_2.png' ;
+  static const String icGoldImage  ='$_rootIconsPath/gold_image.png' ;
 }

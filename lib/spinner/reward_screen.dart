@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:indtubes_1/resources/asset_constants.dart';
 import 'package:indtubes_1/resources/color_constants.dart';
+import 'package:indtubes_1/show_popup.dart';
 import 'package:indtubes_1/spinner/widget/custom_tracker.dart';
 import 'package:indtubes_1/view_model/rewarded_controller.dart';
 
@@ -13,48 +14,53 @@ class RewardedScreen extends StatelessWidget {
 final rewardedController = Get.put(RewardedController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: Get.width,
-        height: Get.height,
-        decoration: BoxDecoration(
-            gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  ColorConstants.topColors,
-                  ColorConstants.middleColors,
-                  ColorConstants.bottomColors,
-                  ColorConstants.endColors,
-                ])),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                _header,
-                const SizedBox(
-                  height: 16,
-                ),
-                _earnCoin,
-                const SizedBox(
-                  height: 16,
-                ),
-                _dailyReward,
-                const SizedBox(
-                  height: 16,
-                ),
-                _race,
+    return WillPopScope(
+      onWillPop:()async{
+       return  rewardedController.onWillPopScope(context) ;
+      },
+      child: Scaffold(
+        body: Container(
+          width: Get.width,
+          height: Get.height,
+          decoration:const  BoxDecoration(
+              gradient:  LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    ColorConstants.topColors,
+                    ColorConstants.middleColors,
+                    ColorConstants.bottomColors,
+                    ColorConstants.endColors,
+                  ])),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  _header,
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  _earnCoin,
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  _dailyReward,
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  _race,
 
-                const SizedBox(
-                  height: 16,
-                ),
-              ],
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -62,43 +68,41 @@ final rewardedController = Get.put(RewardedController());
     );
   }
 
-  Widget get _header => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const CircleAvatar(
-            minRadius: 20,
-            backgroundImage: AssetImage(AssetConstants.icAvatar),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.black.withOpacity(0.5),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: Image(
-                      image: AssetImage(AssetConstants.icGifCoin),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    "100",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  )
-                ],
+  Widget get _header => Align(
+    alignment: Alignment.topRight,
+    child: Container(
+     width: Get.width * .20,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.black.withOpacity(0.5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children:  [
+            Expanded(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: Image(
+                  image: AssetImage(AssetConstants.icGifCoin),
+                ),
               ),
             ),
-          )
-        ],
-      );
+
+            Expanded(
+              child: Text(
+                rewardedController.spinnerController.earnedValue.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            )
+          ],
+        ),
+      ),
+    ),
+  );
 
   Widget get _earnCoin => Container(
         decoration: BoxDecoration(
